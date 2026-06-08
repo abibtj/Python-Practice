@@ -1,5 +1,7 @@
 
 # ###########################################################
+# Data Analysis
+
 # CSV File Processing
 
 # import  csv
@@ -30,8 +32,10 @@ data_frame = pandas.DataFrame(dic)
 # data_frame.to_csv("test.csv") # writes data frame to .csv file
 
 
+# GAMES
+
 # # ###########################################################
-# # TURTLE CROSSING
+# # TURTLE CROSSING GAME
 #
 # from turtle import Screen
 # from turtle_crossing import CarManager, Player, ScoreBoard
@@ -223,7 +227,7 @@ data_frame = pandas.DataFrame(dic)
 
 #
 # #####################################################
-# # TURTLES RACE
+# # TURTLES RACE GAME
 #
 # import random
 # import  turtle as t
