@@ -1,3 +1,4 @@
+from fileinput import close
 from turtle import Turtle
 import random
 
@@ -14,11 +15,11 @@ class Snake:
 
     def __init__(self):
         self.segments = []
-        self.create_snake()
+        self.create_segments()
         self.move_speed = 0.2
         self.head = self.segments[0]
 
-    def create_snake(self):
+    def create_segments(self):
         for position in STARTING_POSITION:
             segment = Turtle(shape="square")
             segment.penup()
@@ -56,6 +57,13 @@ class Snake:
         if self.head.heading() != LEFT:
             self.head.setheading(0)
 
+    def reset(self):
+        for segment in self.segments:
+            segment.goto(1000,1000)
+        self.segments.clear()
+        self.create_segments()
+        self.head = self.segments[0]
+
 class Food(Turtle):
 
     def __init__(self, scr_size):
@@ -74,7 +82,6 @@ class Food(Turtle):
         y = random.randint(-1 * max_position, max_position)
         self.goto(x, y)
 
-
 class ScoreBoard(Turtle):
 
     def __init__(self):
@@ -84,13 +91,30 @@ class ScoreBoard(Turtle):
         self.hideturtle()
         self.goto(0,270)
         self.score = -1
+        self.high_score = self.read_high_score()
         self.update()
 
     def update(self):
         self.clear()
         self.score += 1
-        self.write(f"Score: {self.score}", False, align=ALIGNMENT, font=FONT)
+        self.write(f"Score: {self.score}, High Score: {self.high_score}", False, align=ALIGNMENT, font=FONT)
 
-    def game_over(self):
-        self.goto(0,0)
-        self.write(f"GAME OVER!", False, align=ALIGNMENT, font=FONT)
+    def reset(self ):
+        if self.score > int(self.high_score):
+            self.high_score = str(self.score)
+        self.score = -1
+        self.update()
+        self.write_high_score(self.high_score)
+
+    def write_high_score(self, high_score):
+        with open("Resources/snake_game_high_score.txt", mode="w") as file: # file closes automatically after use
+            file.write(high_score)
+
+    def read_high_score(self):
+        with open("Resources/snake_game_high_score.txt", mode="r") as file: # file closes automatically after use
+            return file.read()
+
+
+    # def game_over(self):
+    #     self.goto(0,0)
+    #     self.write(f"GAME OVER!", False, align=ALIGNMENT, font=FONT)

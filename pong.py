@@ -13,7 +13,7 @@ class Paddle(Turtle):
         self.color("white")
         self.turtlesize(4, 0.5)
         self.goto(x_cord, 0)
-        # self.score = 0
+        # self.level = 0
 
     def move_up(self):
         self.goto(self.xcor(), self.ycor() + 50)

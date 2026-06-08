@@ -1,6 +1,85 @@
 
-#
 # ###########################################################
+# CSV File Processing
+
+# import  csv
+import pandas
+from numpy.ma.extras import average
+
+# with open("./Resources/weather.csv", mode="r") as data_file:
+    # data = data_file.readlines() # direct line-by-line read
+    # data = csv.reader(data_file) # inbuilt csv package
+
+data = pandas.read_csv("./Resources/weather.csv") # returns a dataframe (table)
+temperatures = data["temp"] # returns a series (column)
+conditions = data.condition # returns a series (column)
+# print(f"average: {average(temperatures)}")
+# print(f"mean: {temperatures.mean()}")
+# print(f"max: {temperatures.max()}")
+# print(f"min: {temperatures.min()}")
+max_temp_row = data[data.temp == temperatures.max()]
+print(max_temp_row)
+
+# create a dataframe from dictionary
+dic = {
+    "name" : ["Abeeb", "Ray", "Alm"],
+    "age" : [20, 10, 6]
+}
+
+data_frame = pandas.DataFrame(dic)
+# data_frame.to_csv("test.csv") # writes data frame to .csv file
+
+
+# # ###########################################################
+# # TURTLE CROSSING
+#
+# from turtle import Screen
+# from turtle_crossing import CarManager, Player, ScoreBoard
+# import time
+# import math
+#
+# SCREEN_WIDTH = 800
+# SCREEN_HEIGHT = 600
+#
+# screen = Screen()
+# screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
+# screen.bgcolor("white")
+# screen.title("Turtle Crossing")
+# screen.tracer(0) # disable animation, requires manual screen update to see changes
+#
+# car_manager = CarManager()
+# player = Player()
+# score_board = ScoreBoard()
+#
+# screen.onkey(player.move, "Up")
+#
+# screen.listen()
+#
+# game_over = False
+#
+# while not game_over:
+#     screen.update()
+#     time.sleep(car_manager.car_speed)
+#     car_manager.move_cars()
+#
+#     # Detect collision with a car
+#     for car in car_manager.cars:
+#         # if (car.distance(player) < 20) and (math.fabs(car.ycor() - player.ycor()) < 5):
+#         if (car.distance(player) < 20):
+#             score_board.game_over()
+#             game_over = True
+#
+#     # Detect getting to destination
+#     if (player.ycor() >= 280):
+#         score_board.update()
+#         player.goto(0,-280)
+#         car_manager.car_speed *= 0.95 # Increase cars speed
+#
+# screen.exitonclick()
+
+
+#
+# # ###########################################################
 # # PONG GAME
 #
 # from turtle import Screen
@@ -70,7 +149,7 @@
 # screen.exitonclick()
 
 
-
+#
 # ##########################################################
 # # SNAKE GAME
 #
@@ -136,51 +215,52 @@
 #     # Detect collision with tail
 #     for segment in snake.segments[1:]:
 #         if snake.head.distance(segment) < 10:
-#             game_over = True
-#             score_board.game_over()
+#             # game_over = True
+#             score_board.reset()
+#             snake.reset()
 #
 # screen.exitonclick()
 
-
-#####################################################
-# TURTLES RACE
-
-import random
-import  turtle as t
-
-screen = t.Screen()
-screen.setup(500,400)
-screen.title("Turtles Race")
-user_bet = screen.textinput(title="Make a Bet", prompt="Which turtle colour will win the race?")
-
-t.colormode(255)
-tutles = []
-colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
-
-for color in colors:
-    segment = t.Turtle(shape="turtle")
-    segment.color(color)
-    tutles.append(segment)
-
-y = [-90, -60, -30, 0, 30, 60, 90]
-for i in range(0, len(tutles)):
-    segment = tutles[i]
-    segment.penup()
-    segment.goto(x=-230, y=y[i])
-
-game_over = False
-
-while not game_over:
-    tut_index = -1
-    for segment in tutles:
-        tut_index += 1
-        segment.forward(random.randint(1,10))
-        pos_x = round(segment.xcor())
-        if pos_x >= 230:
-            game_over = True
-            if user_bet == colors[tut_index]:
-                print("You won!")
-            else:
-                print(f"You lost! The {colors[tut_index]} turtle won the race, but you bet on {user_bet} turtle")
-
-screen.exitonclick()
+#
+# #####################################################
+# # TURTLES RACE
+#
+# import random
+# import  turtle as t
+#
+# screen = t.Screen()
+# screen.setup(500,400)
+# screen.title("Turtles Race")
+# user_bet = screen.textinput(title="Make a Bet", prompt="Which turtle colour will win the race?")
+#
+# t.colormode(255)
+# tutles = []
+# colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
+#
+# for color in colors:
+#     segment = t.Turtle(shape="turtle")
+#     segment.color(color)
+#     tutles.append(segment)
+#
+# y = [-90, -60, -30, 0, 30, 60, 90]
+# for i in range(0, len(tutles)):
+#     segment = tutles[i]
+#     segment.penup()
+#     segment.goto(x=-230, y=y[i])
+#
+# game_over = False
+#
+# while not game_over:
+#     tut_index = -1
+#     for segment in tutles:
+#         tut_index += 1
+#         segment.forward(random.randint(1,10))
+#         pos_x = round(segment.xcor())
+#         if pos_x >= 230:
+#             game_over = True
+#             if user_bet == colors[tut_index]:
+#                 print("You won!")
+#             else:
+#                 print(f"You lost! The {colors[tut_index]} turtle won the race, but you bet on {user_bet} turtle")
+#
+# screen.exitonclick()
