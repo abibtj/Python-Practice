@@ -1,0 +1,17 @@
+{
+    "Amazon": {
+        "email": "example@amazon.com"
+    },
+    "Facebook": {
+        "email": "something@facebook.com"
+    },
+    "Yahoo": {
+        "email": "example@amazon.com"
+    },
+    "Twitter": {
+        "email": "twi@twitter.com"
+    },
+    "Instagram": {
+        "email": "inst@instagram.co.ng"
+    }
+}
