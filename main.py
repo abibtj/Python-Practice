@@ -1,119 +1,123 @@
+
+
 # ###########################################################
 # GUI
 
-# import tkinter as tk
-from tkinter import  *
+from tkinter import *
+from tkinter import messagebox
+from random import choice, randint, shuffle
+import pyperclip
 import json
 
-#Creating a new window and configurations
-window = Tk()
-window.title("Widget Examples")
-window.minsize(width=500, height=500)
+# ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
-#Labels
-label = Label(text="This is old text")
-label.config(text="This is new text")
-label.pack() # asides .pack(), .place(0,0) - coordinate, or .grid(column=0, row= 2) - grid system can also be used to add components to the window
+#Password Generator Project
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-#Buttons
-def action():
-    print("Do something")
+    password_letters = [choice(letters) for _ in range(randint(8, 10))]
+    password_symbols = [choice(symbols) for _ in range(randint(2, 4))]
+    password_numbers = [choice(numbers) for _ in range(randint(2, 4))]
+
+    password_list = password_letters + password_symbols + password_numbers
+    shuffle(password_list)
+
+    password = "".join(password_list)
+    password_entry.insert(0, password)
+    pyperclip.copy(password)
+
+# ---------------------------- SAVE PASSWORD ------------------------------- #
+def save():
+
     website = website_entry.get()
     email = email_entry.get()
+    password = password_entry.get()
     new_data = {
         website: {
-            "email": email
+            "email": email,
+            "password": password,
         }
     }
 
-    # open file to read json data and update it
-    with open("test.json", "r") as json_file_read:
-        contents = json.load(json_file_read)
-        contents.update(new_data)
+    if len(website) == 0 or len(password) == 0:
+        messagebox.showinfo(title="Oops", message="Please make sure you haven't left any fields empty.")
+    else:
+        try:
+            with open("test.json", "r") as data_file:
+                #Reading old data
+                data = json.load(data_file)
+        except FileNotFoundError:  # runs only if there's a FileNotFoundError (Exception)
+            with open("test.json", "w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else: # runs only if there was no exception
+            #Updating old data with new data
+            data.update(new_data)
 
-    # open file to write the updated data
-    with open("test.json", "w") as json_file_write:
-        json.dump(contents, json_file_write, indent=4)
+            with open("test.json", "w") as data_file:
+                #Saving updated data
+                json.dump(data, data_file, indent=4)
+        finally: # always runs, regardless of exception or not
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
 
-    website_entry.delete(0, END)
-    email_entry.delete(0, END)
 
-#calls action() when pressed
-button = Button(text="Click Me", command=action)
-button.pack()
+# ---------------------------- FIND PASSWORD ------------------------------- #
+def find_password():
+    website = website_entry.get()
+    try:
+        with open("test.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No Data File Found.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No details for {website} exists.")
+
+
+# ---------------------------- UI SETUP ------------------------------- #
+
+window = Tk()
+window.title("Password Manager")
+window.config(padx=50, pady=50)
+
+canvas = Canvas(height=200, width=200)
+logo_img = PhotoImage(file="Resources/logo.png")
+canvas.create_image(100, 100, image=logo_img)
+canvas.grid(row=0, column=1)
+
+#Labels
+website_label = Label(text="Website:")
+website_label.grid(row=1, column=0)
+email_label = Label(text="Email/Username:")
+email_label.grid(row=2, column=0)
+password_label = Label(text="Password:")
+password_label.grid(row=3, column=0)
 
 #Entries
-website_entry = Entry(width=30)
-#Add some text to begin with
-website_entry.insert(END, string="Amazon")
-#Gets text in entry
-print(website_entry.get())
-website_entry.pack()
+website_entry = Entry(width=21)
+website_entry.grid(row=1, column=1)
+website_entry.focus()
+email_entry = Entry(width=35)
+email_entry.grid(row=2, column=1, columnspan=2)
+email_entry.insert(0, "abc@gmail.com")
+password_entry = Entry(width=21)
+password_entry.grid(row=3, column=1)
 
-email_entry = Entry(width=30)
-#Add some text to begin with
-email_entry.insert(END, string="example@amazon.com")
-email_entry.pack()
-
-#Text
-text = Text(height=5, width=30)
-#Puts cursor in textbox.
-text.focus()
-#Adds some text to begin with.
-text.insert(END, "Example of multi-line text entry.")
-#Get's current value in textbox at line 1, character 0
-print(text.get("1.0", END))
-text.pack()
-
-#Spinbox
-def spinbox_used():
-    #gets the current value in spinbox.
-    print(spinbox.get())
-spinbox = Spinbox(from_=0, to=10, width=5, command=spinbox_used)
-spinbox.pack()
-
-#Scale
-#Called with current scale value.
-def scale_used(value):
-    print(value)
-scale = Scale(from_=0, to=100, command=scale_used)
-scale.pack()
-
-#Checkbutton
-def checkbutton_used():
-    #Prints 1 if On button checked, otherwise 0.
-    print(checked_state.get())
-#variable to hold on to checked state, 0 is off, 1 is on.
-checked_state = IntVar()
-checkbutton = Checkbutton(text="Is On?", variable=checked_state, command=checkbutton_used)
-checked_state.get()
-checkbutton.pack()
-
-#Radiobutton
-def radio_used():
-    print(radio_state.get())
-#Variable to hold on to which radio button value is checked.
-radio_state = IntVar()
-radiobutton1 = Radiobutton(text="Option1", value=1, variable=radio_state, command=radio_used)
-radiobutton2 = Radiobutton(text="Option2", value=2, variable=radio_state, command=radio_used)
-radiobutton1.pack()
-radiobutton2.pack()
-
-
-#Listbox
-def listbox_used(event):
-    # Gets current selection from listbox
-    print(listbox.get(listbox.curselection()))
-
-listbox = Listbox(height=4)
-fruits = ["Apple", "Pear", "Orange", "Banana"]
-for item in fruits:
-    listbox.insert(fruits.index(item), item)
-listbox.bind("<<ListboxSelect>>", listbox_used)
-listbox.pack()
+# Buttons
+search_button = Button(text="Search", width=13, command=find_password)
+search_button.grid(row=1, column=2)
+generate_password_button = Button(text="Generate Password", command=generate_password)
+generate_password_button.grid(row=3, column=2)
+add_button = Button(text="Add", width=36, command=save)
+add_button.grid(row=4, column=1, columnspan=2)
 
 window.mainloop() # keep window open until closed
-
 
 
 # # ###########################################################

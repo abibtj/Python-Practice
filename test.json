@@ -1,17 +1,10 @@
 {
     "Amazon": {
-        "email": "example@amazon.com"
+        "email": "abc@gmail.com",
+        "password": "8f+L8!eMUR!kiI"
     },
     "Facebook": {
-        "email": "something@facebook.com"
-    },
-    "Yahoo": {
-        "email": "example@amazon.com"
-    },
-    "Twitter": {
-        "email": "twi@twitter.com"
-    },
-    "Instagram": {
-        "email": "inst@instagram.co.ng"
+        "email": "xyz@gmail.com",
+        "password": "%9wIJJE6X&oda2"
     }
 }
